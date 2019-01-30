@@ -12,7 +12,7 @@ set(BIN_NAME dc)
 
 #source list
 set(SRC_LIST
-    ${CMAKE_SOURCE_DIR}/src/main.c
+    ${CMAKE_SOURCE_DIR}/src/dictionaryConverter.c
 )
 
 #include files
