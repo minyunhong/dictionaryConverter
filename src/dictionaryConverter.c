@@ -24,7 +24,7 @@ int main( int argc, char *argv[] )
 
 	if(!strcmp(argv[1],"output.dct"))
 	{
-		printf("output.txt open!!\n");
+		printf("output.dct open!!\n");
 		fp1 = fopen("output.dct", "r");
 		fp2 = fopen("final.dct", "w");
 
@@ -64,17 +64,16 @@ int main( int argc, char *argv[] )
 			{
 				if(flag == 0)
 				{
-					while(st != NULL)
-					{
-						fprintf(fp2, "\"%s\" ", st);
-						st = strtok(NULL, "  //");
-					}
+					fprintf(fp2, "%s ", st);
+					st = strtok(NULL, "  //");
+					fprintf(fp2, "\"%s\"", st);
+					
 					flag = 1;
 				}
 				else if(flag == 1)
 				{
 					st = strtok(NULL, "  //");
-					fprintf(fp2, "\n|\"%s\"", st);
+					fprintf(fp2, "\n| \"%s\"", st);
 				}
 			}
 			else
