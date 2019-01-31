@@ -2,19 +2,21 @@
 #include <string.h>
 #include <ctype.h>
 
-char *strlwr(char *str){
+char *strlwr(char *str)
+{
 	unsigned char *p = (unsigned char*)str;
-	while(*p){
+	while(*p)
+	{
 		*p = tolower((unsigned char)*p);
 		p++;
 	}
 	return str;
 }
 
-int main( int argc, char *argv[] ){ 
+int main( int argc, char *argv[] )
+{ 
 	FILE *fp1, *fp2;
 	char pstr[100];
-	char strPron[] = "!pronounce ";
 	char *st = NULL;
 	int splitNumber = 1;
 	int atoiChar;
@@ -24,16 +26,18 @@ int main( int argc, char *argv[] ){
 	{
 		printf("output.txt open!!\n");
 		fp1 = fopen("output.dct", "r");
-		fp2 = fopen("output2.dct", "w");
+		fp2 = fopen("final.dct", "w");
 
-		if(fp1 == NULL || fp2 == NULL){
+		if(fp1 == NULL || fp2 == NULL)
+		{
 			printf("file open error\n");
 			return 1;
 		}
 
 		while(1)
 		{
-			if(feof(fp1)!=0){
+			if(feof(fp1)!=0)
+			{
 				printf("file ended\n");
 				break;
 			}
@@ -44,18 +48,16 @@ int main( int argc, char *argv[] ){
 
 			if(atoiChar == splitNumber) // split number check
 			{
-				printf("splitNumber %d,startFlag %d flag %d\n", splitNumber, startFlag, flag);
 				flag = 0; // check same word
 				if(atoiChar == 1)// [data] start check
-				{
-					printf("start!\n");
 					startFlag = 1;
-				}
-				strcpy(pstr,strPron);
-				
+
+				strcpy(pstr, "!pronounce ");
 				//!pronounce print option
-				if(splitNumber == 1) fprintf(fp2, "%s", pstr);
-				else	 			 fprintf(fp2, ";\n%s", pstr);
+				if(splitNumber == 1)
+					fprintf(fp2, "%s", pstr);
+				else
+					fprintf(fp2, ";\n%s", pstr);
 				splitNumber++;
 			}
 			else if(startFlag == 1)
@@ -83,20 +85,21 @@ int main( int argc, char *argv[] ){
 					st = strtok(NULL, "  //");
 				}
 			}
-
 		}
+
 		splitNumber = 0;
 		fclose(fp1);
 		fclose(fp2);
-		printf("output2.dct file created\n");
-
-	}// end of output.txt
+		printf("final.dct file created\n");
+	}
 	else
 	{
+		int idx = 1;
 		fp1 = fopen(argv[1], "r");
 		fp2 = fopen("output.dct", "w");
 
-		if(fp1 == NULL || fp2 == NULL){
+		if(fp1 == NULL || fp2 == NULL)
+		{
 			printf("file open error\n");
 			return 1;
 		}
@@ -106,11 +109,12 @@ int main( int argc, char *argv[] ){
 		fprintf(fp2, "[SubHeader]\n");
 		fprintf(fp2, "Content=UNDEFINED\nRepresentation=EDCT_REPR_SZ_STRING\n\n");
 		fprintf(fp2, "[Data]\n");
+		fprintf(fp2, "%d\n", idx++);
 
-		int i=1;
-		fprintf(fp2, "%d\n", i++);
-		while(1){
-			if(feof(fp1)!=0){
+		while(1)
+		{
+			if(feof(fp1)!=0)
+			{
 				printf("file ended\n");
 				break;
 			}
@@ -123,13 +127,14 @@ int main( int argc, char *argv[] ){
 				fprintf(fp2, "%s\n", strlwr(st));
 				st = strtok(NULL, "\t");
 			}
-			fprintf(fp2, "%d\n",i++ );
+			fprintf(fp2, "%d\n", idx++);
 		}
 
 		fclose(fp1);
 		fclose(fp2);
 		printf("output.dct file created\n");
 
-	}//end of input.txt
+	}
+
 	return 0;
 }

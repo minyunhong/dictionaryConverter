@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 2.8)
 set(CMAKE_C_COMPILER "gcc")
 
 #binary name
-set(BIN_NAME dc)
+set(BIN_NAME ditionaryConverter.exe)
 
 #source list
 set(SRC_LIST
