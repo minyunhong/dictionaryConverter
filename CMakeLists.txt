@@ -5,7 +5,7 @@ project(dictionaryConverter)
 cmake_minimum_required(VERSION 2.8)
 
 #compiler
-set(CMAKE_C_COMPILER "gcc")
+set(CMAKE_C_COMPILER "g++")
 
 #binary name
 set(BIN_NAME dictionaryConverter.out)

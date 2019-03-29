@@ -1,6 +1,11 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+
+#define MAX_NUM    6
+#define STR_LENG   255
+char pronounce_list[MAX_NUM][STR_LENG] = {0};
 
 char *strlwr(char *str)
 {
@@ -13,6 +18,24 @@ char *strlwr(char *str)
 	return str;
 }
 
+void initialize_pronounce_list()
+{
+	int i=0;
+	for(i=0; i<MAX_NUM; i++)
+		memset(pronounce_list[i], 0, STR_LENG);
+}
+
+bool duplicate_check(char *str, int cnt)
+{
+	int i=0;
+	for(i=0; i<cnt; i++)
+	{
+		if(!strcmp(pronounce_list[i], str))
+			return true;
+	}
+	return false;
+}
+
 int main( int argc, char *argv[] )
 { 
 	FILE *fp1, *fp2;
@@ -21,6 +44,7 @@ int main( int argc, char *argv[] )
 	int splitNumber = 1;
 	int atoiChar;
 	int flag = 0, startFlag = 0;
+	int cnt = 0;
 
 	if(!strcmp(argv[1],"output.dct"))
 	{
@@ -49,6 +73,8 @@ int main( int argc, char *argv[] )
 			if(atoiChar == splitNumber) // split number check
 			{
 				flag = 0; // check same word
+				cnt = 0;
+				initialize_pronounce_list();
 				if(atoiChar == 1)// [data] start check
 					startFlag = 1;
 
@@ -66,6 +92,7 @@ int main( int argc, char *argv[] )
 				{
 					fprintf(fp2, "%s ", st);
 					st = strtok(NULL, "  //");
+					strncpy(pronounce_list[cnt++], st, strlen(st));
 					fprintf(fp2, "\"%s\"", st);
 					
 					flag = 1;
@@ -73,7 +100,11 @@ int main( int argc, char *argv[] )
 				else if(flag == 1)
 				{
 					st = strtok(NULL, "  //");
-					fprintf(fp2, "\n| \"%s\"", st);
+					if(!duplicate_check(st, cnt))
+					{
+						strncpy(pronounce_list[cnt++], st, strlen(st));
+						fprintf(fp2, "\n| \"%s\"", st);
+					}
 				}
 			}
 			else
