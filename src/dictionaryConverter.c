@@ -18,6 +18,22 @@ char *strlwr(char *str)
 	return str;
 }
 
+int check_blank_words(char* pstr)
+{
+	if (pstr[0] == '\r' || pstr[0] == '\n' || pstr[0] == '\v' || pstr[0] == '\t')
+		return true;
+	else
+		return false;
+}
+
+int check_header_words(char* pstr)
+{
+	if(strstr(pstr, "[SubHeader]") || strstr(pstr, "Content=") || strstr(pstr, "Representation=") )
+		return true;
+	else
+		return false; 
+}
+
 void initialize_pronounce_list()
 {
 	int i=0;
@@ -66,10 +82,12 @@ int main( int argc, char *argv[] )
 				break;
 			}
 			fgets(pstr,sizeof(pstr),fp1);
+			if(check_blank_words(pstr) == true || check_header_words(pstr) == true)
+				continue;
+
 			pstr[strlen(pstr)-2] = '\0';
 			st = strtok(pstr, "  //");
 			atoiChar = atoi(pstr);
-
 			if(atoiChar == splitNumber) // split number check
 			{
 				flag = 0; // check same word
