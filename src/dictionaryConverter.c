@@ -26,6 +26,19 @@ int check_blank_words(char* pstr)
 		return false;
 }
 
+void remove_blank_words_end(char* pstr, char* renew)
+{
+	int len = strlen(pstr);
+	memset(renew, 0, STR_LENG);
+	while(len-1 >= 0){
+		if(pstr[len-1] == ' ')
+			len--;
+		else
+			break;
+	}
+	memcpy(renew, pstr, len);
+}
+
 int check_header_words(char* pstr)
 {
 	if(strstr(pstr, "[SubHeader]") || strstr(pstr, "Content=") || strstr(pstr, "Representation=") )
@@ -55,7 +68,8 @@ bool duplicate_check(char *str, int cnt)
 int main( int argc, char *argv[] )
 { 
 	FILE *fp1, *fp2;
-	char pstr[100];
+	char pstr[STR_LENG];
+	char word[STR_LENG];
 	char *st = NULL;
 	int splitNumber = 1;
 	int atoiChar;
@@ -86,7 +100,7 @@ int main( int argc, char *argv[] )
 				continue;
 
 			pstr[strlen(pstr)-2] = '\0';
-			st = strtok(pstr, "  //");
+			st = strtok(pstr, "//");
 			atoiChar = atoi(pstr);
 			if(atoiChar == splitNumber) // split number check
 			{
@@ -108,20 +122,25 @@ int main( int argc, char *argv[] )
 			{
 				if(flag == 0)
 				{
-					fprintf(fp2, "%s ", st);
-					st = strtok(NULL, "  //");
-					strncpy(pronounce_list[cnt++], st, strlen(st));
-					fprintf(fp2, "\"%s\"", st);
+					remove_blank_words_end(st,word);
+					printf("st:%s! word:%s!\n",st,word);
+					fprintf(fp2, "%s ", word);
+	
+					st = strtok(NULL, "//");
+					remove_blank_words_end(st,word);
+					strncpy(pronounce_list[cnt++], word, strlen(word));
+					fprintf(fp2, "\"%s\"", word);
 					
 					flag = 1;
 				}
 				else if(flag == 1)
 				{
-					st = strtok(NULL, "  //");
-					if(!duplicate_check(st, cnt))
+					st = strtok(NULL, "//");
+					remove_blank_words_end(st,word);
+					if(!duplicate_check(word, cnt))
 					{
-						strncpy(pronounce_list[cnt++], st, strlen(st));
-						fprintf(fp2, "\n| \"%s\"", st);
+						strncpy(pronounce_list[cnt++], word, strlen(word));
+						fprintf(fp2, "\n| \"%s\"", word);
 					}
 				}
 			}
@@ -130,7 +149,7 @@ int main( int argc, char *argv[] )
 				while(st != NULL)
 				{
 					fprintf(fp2, "%s\n", st);
-					st = strtok(NULL, "  //");
+					st = strtok(NULL, "//");
 				}
 			}
 		}
